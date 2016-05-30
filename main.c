@@ -6,11 +6,17 @@
 /*   By: dmoureu- <dmoureu-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/27 01:20:13 by dmoureu-          #+#    #+#             */
-/*   Updated: 2016/05/29 18:55:54 by dmoureu-         ###   ########.fr       */
+/*   Updated: 2016/05/30 19:22:58 by dmoureu-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
+
+int	printresult(int x, int y)
+{
+	ft_printf("%d %d\n", y, x);
+	return (1);
+}
 
 int	store_map(t_filler *filler, char *buffer, int y)
 {
@@ -39,6 +45,9 @@ int	gnl_check(t_filler *filler, char *buffer, int i)
 			return (0);
 	if (i > filler->map_y + 3 && i < filler->map_y + 4 + filler->piece_y)
 		store_piece(filler, buffer, i - (filler->map_y + 4));
+	if (i > filler->map_y + 3 && i < filler->map_y + 4 + filler->piece_y
+		&& filler->dir == NULLDIR)
+		seek_dir(filler);
 	return (1);
 }
 
@@ -56,7 +65,7 @@ int	main(void)
 			return (0);
 		if (i == filler->map_y + 3 + filler->piece_y)
 		{
-			if (!search_position(filler))
+			if (!search_position_switch(filler))
 				ft_dprintf(1, "0 0\n");
 			i = 0;
 			free_map(filler);

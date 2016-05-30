@@ -6,207 +6,81 @@
 /*   By: dmoureu- <dmoureu-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/27 15:45:06 by dmoureu-          #+#    #+#             */
-/*   Updated: 2016/05/30 00:14:09 by dmoureu-         ###   ########.fr       */
+/*   Updated: 2016/05/30 19:28:01 by dmoureu-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "filler.h"
-#define MACRODEOUF filler->piece[py][px] == '.' && check_map_case(filler, px + x, py + y) > 0 && check_map_case(filler, px + x, py + y) != filler->player
 
-int		search_position_down_left(t_filler *filler)
-{
-	int	x;
-	int	y;
-	int best[2];
+#define CMCXY check_map_case(filler, px + x, py + y)
+#define PIECEXY filler->piece[py][px]
+#define ENEMYTOUCH PIECEXY == '.' && CMCXY > 0 && CMCXY != filler->player
 
-	y = 0;
-	best[1] = -1;
-	best[0] = -1;
-	while (y < filler->map_y)
-	{
-		x = filler->map_x - 1;
-		while (x >= 0)
-		{
-			if (pos_piece_valide(filler, x, y))
-			{
-				best[1] = y;
-				best[0] = x;
-				// ft_dprintf(1, "%d %d\n", y, x);
-				// return (1);
-			}
-			if (pos_piece_valide(filler, x, y) == 2)
-			{
-				ft_dprintf(1, "%d %d\n", y, x);
-				return (1);
-			}
-			x--;
-		}
-		y++;
-	}
-	if (best[1] >= 0)
-	{
-		ft_dprintf(1, "%d %d\n", best[1], best[0]);
-		return (1);
-	}
-	return (0);
-}
-
-int		search_position_up_right(t_filler *filler)
-{
-	int	x;
-	int	y;
-	int best[2];
-
-	y = filler->map_y - 1;
-	best[1] = -1;
-	best[0] = -1;
-	while (y >= 0)
-	{
-		x = 0;
-		while (x < filler->map_x)
-		{
-			if (pos_piece_valide(filler, x, y))
-			{
-				best[1] = y;
-				best[0] = x;
-				// ft_dprintf(1, "%d %d\n", y, x);
-				// return (1);
-			}
-			if (pos_piece_valide(filler, x, y) == 2)
-			{
-				ft_dprintf(1, "%d %d\n", y, x);
-				return (1);
-			}
-			x++;
-		}
-		y--;
-	}
-	if (best[1] >= 0)
-	{
-		ft_dprintf(1, "%d %d\n", best[1], best[0]);
-		return (1);
-	}
-	return (0);
-}
-
-int		search_position_left(t_filler *filler)
+int		search_position_o(t_filler *filler)
 {
 	int	x;
 	int	y;
 	int best[2];
 
 	x = filler->map_x - 1;
-	best[1] = -1;
-	best[0] = -1;
+	setcoord(best, -1, -1);
 	while (x >= 0)
 	{
 		y = filler->map_y - 1;
 		while (y >= 0)
 		{
 			if (pos_piece_valide(filler, x, y))
-			{
-				best[1] = y;
-				best[0] = x;
-				// ft_dprintf(1, "%d %d\n", y, x);
-				// return (1);
-			}
+				setcoord(best, x, y);
 			if (pos_piece_valide(filler, x, y) == 2)
-			{
-				ft_dprintf(1, "%d %d\n", y, x);
-				return (1);
-			}
+				return (printresult(x, y));
 			y--;
 		}
 		x--;
 	}
 	if (best[1] >= 0)
-	{
-		ft_dprintf(1, "%d %d\n", best[1], best[0]);
-		return (1);
-	}
+		return (printresult(best[0], best[1]));
 	return (0);
 }
 
-int		search_position_up_left(t_filler *filler)
+int		alt_search(t_filler *filler,
+						int (f1)(t_filler*),
+						int (f2)(t_filler*))
 {
-	int	x;
-	int	y;
-	int best[2];
-
-	y = filler->map_y - 1;
-	best[1] = -1;
-	best[0] = -1;
-	while (y >= 0)
-	{
-		x = filler->map_x -1;
-		while (x >= 0)
-		{
-			if (pos_piece_valide(filler, x, y))
-			{
-				best[1] = y;
-				best[0] = x;
-				// ft_dprintf(1, "%d %d\n", y, x);
-				// return (1);
-			}
-			if (pos_piece_valide(filler, x, y) == 2)
-			{
-				ft_dprintf(1, "%d %d\n", y, x);
-				return (1);
-			}
-			x--;
-		}
-		y--;
-	}
-	if (best[1] >= 0)
-	{
-		ft_dprintf(1, "%d %d\n", best[1], best[0]);
-		return (1);
-	}
-	return (0);
+	if (filler->way % 2 == 1)
+		return (f1(filler));
+	else
+		return (f2(filler));
 }
 
-int		search_position(t_filler *filler)
+int		search_position_switch(t_filler *filler)
 {
-	int	x;
-	int	y;
-	int best[2];
-
-
-	//if (filler->way % 2 == 1)
-		//return (search_position_left(filler));
-	//else
-		//return (search_position_up_right(filler));
-	y = 0;
-	best[1] = -1;
-	best[0] = -1;
-	while (y < filler->map_y)
-	{
-		x = 0;
-		while (x < filler->map_x)
-		{
-			if (pos_piece_valide(filler, x, y))
-			{
-				best[1] = y;
-				best[0] = x;
-			}
-			if (pos_piece_valide(filler, x, y) == 2)
-			{
-				ft_dprintf(1, "%d %d\n", y, x);
-				return (1);
-			}
-			x++;
-		}
-		y++;
-	}
-	if (best[1] >= 0)
-	{
-		ft_dprintf(1, "%d %d\n", best[1], best[0]);
-		return (1);
-	}
-	return (0);
+	if (filler->dir == O)
+		return (search_position_o(filler));
+	if (filler->dir == E)
+		return (search_position_e(filler));
+	if (filler->dir == N)
+		return (alt_search(filler, search_position_no, search_position_ne));
+	if (filler->dir == S)
+		return (alt_search(filler, search_position_so, search_position_se));
+	if (filler->dir == NE)
+		return (alt_search(filler, search_position_ne, search_position_e));
+	if (filler->dir == NO)
+		return (alt_search(filler, search_position_no, search_position_so));
+	if (filler->dir == SO)
+		return (alt_search(filler, search_position_so, search_position_o));
+	if (filler->dir == SE)
+		return (alt_search(filler, search_position_se, search_position_e));
+	return (search_position_no(filler));
 }
 
-int	pos_piece_valide(t_filler *filler, int x, int y)
+int		pos_piece_return(int touch, int enemy)
+{
+	if (touch == 1 && enemy)
+		return (2);
+	return (touch == 1 ? 1 : 0);
+}
+
+int		pos_piece_valide(t_filler *filler, int x, int y)
 {
 	int touch;
 	int	px;
@@ -219,20 +93,17 @@ int	pos_piece_valide(t_filler *filler, int x, int y)
 	while (++py < filler->piece_y && (px = -1))
 		while (++px < filler->piece_x)
 		{
-			if (filler->piece[py][px] == '*')
+			if (PIECEXY == '*')
 			{
-				if (check_map_case(filler, px + x, py + y) == filler->player)
+				if (CMCXY == filler->player)
 					touch++;
-				else if (check_map_case(filler, px + x, py + y) != 0)
+				else if (CMCXY != 0)
 					return (0);
 			}
-			else if (filler->piece[py][px] == '.' &&
-				check_map_case(filler, px + x, py + y) == -1)
+			else if (PIECEXY == '.' && CMCXY == -1)
 				return (0);
-			if (MACRODEOUF)
+			if (ENEMYTOUCH)
 				enemy++;
 		}
-	if (touch == 1 && enemy)
-		return (2);
-	return (touch == 1 ? 1 : 0);
+	return (pos_piece_return(touch, enemy));
 }

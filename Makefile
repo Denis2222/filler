@@ -2,7 +2,10 @@ SRCS = main.c \
 		filler.c \
 		check.c \
 		search.c \
-		
+		seek.c \
+		coord.c \
+		search_position.c
+
 
 NAME = filler
 GCC_FLAGS = -g -Wall -Werror -Wextra

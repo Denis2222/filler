@@ -6,7 +6,7 @@
 /*   By: dmoureu- <dmoureu-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/27 15:47:29 by dmoureu-          #+#    #+#             */
-/*   Updated: 2016/05/27 16:54:14 by dmoureu-         ###   ########.fr       */
+/*   Updated: 2016/05/30 16:32:24 by dmoureu-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ t_filler	*newfiller(void)
 	filler->way = 0;
 	filler->map = NULL;
 	filler->piece = NULL;
+	filler->dir = NULLDIR;
 	return (filler);
 }
 
