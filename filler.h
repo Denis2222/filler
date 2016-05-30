@@ -6,7 +6,7 @@
 /*   By: dmoureu- <dmoureu-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/03/29 13:41:17 by dmoureu-          #+#    #+#             */
-/*   Updated: 2016/05/27 16:53:01 by dmoureu-         ###   ########.fr       */
+/*   Updated: 2016/05/30 01:00:50 by dmoureu-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,18 @@
 # define FILLER_H
 
 # include "libft/libft.h"
+
+enum	e_dir
+{
+	N,
+	E,
+	S,
+	O,
+	NE,
+	NO,
+	SE,
+	SO
+};
 
 typedef struct	s_filler
 {
